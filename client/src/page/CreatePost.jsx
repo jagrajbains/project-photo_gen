@@ -12,6 +12,7 @@ const CreatePost = () => {
     prompt: '',
     photo: '',
   });
+  const [sharing, setSharing] = useState(false);
 
   const [generatingImg, setGeneratingImg] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -28,6 +29,7 @@ const CreatePost = () => {
 
     if (form.prompt && form.photo) {
       setLoading(true);
+      setSharing(true);
       try {
         const response = await fetch('https://project-photo-gen-by-jagraj.onrender.com/api/v1/post', {
           method: 'POST',
@@ -44,6 +46,7 @@ const CreatePost = () => {
         alert(err);
       } finally {
         setLoading(false);
+        setSharing(false);
       }
     } else {
       alert('Please generate an image with proper details');
@@ -53,6 +56,7 @@ const CreatePost = () => {
     if (form.prompt) {
       try {
         setGeneratingImg(true);
+        setLoading(true)
         const response = await fetch('https://project-photo-gen-by-jagraj.onrender.com/api/v1/photogen', {
           method: 'POST',
           headers: {
@@ -69,6 +73,7 @@ const CreatePost = () => {
         alert(err);
       } finally {
         setGeneratingImg(false);
+        setLoading(false)
       }
     } else {
       alert('Please provide proper prompt');
@@ -130,7 +135,8 @@ const CreatePost = () => {
           <button
             type="button"
             onClick={generateImage}
-            className=" text-white bg-green-700 font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+            className="text-white bg-green-700 font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+            disabled={loading}
           >
             {generatingImg ? 'Generating...' : 'Generate'}
           </button>
@@ -140,9 +146,10 @@ const CreatePost = () => {
           <p className="mt-2 text-[#666e75] text-[14px]">** Once you have created the image you want, you can share it with others in the community **</p>
           <button
             type="submit"
+            disabled={loading}
             className="mt-3 text-white bg-[#6469ff] font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center"
           >
-            {loading ? 'Sharing...' : 'Share with the Community'}
+            {sharing ? 'Sharing...' : 'Share with the Community'}
           </button>
         </div>
       </form>
